@@ -15,7 +15,8 @@ fun main(args: Array<String>): Unit =
 fun Application.module() {
     configureRouting()
     excute()
-    usersdao()
+    usersDao()
+    petDao()
     install(Thymeleaf){
         setTemplateResolver(ClassLoaderTemplateResolver().apply {
             prefix = "/"

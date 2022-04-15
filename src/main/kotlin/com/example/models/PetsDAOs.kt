@@ -11,17 +11,30 @@ import org.jetbrains.exposed.sql.*
 
 //テーブルの枠
 object PetsDAOs:IntIdTable("Pets"){
-    //val countber = integer("id").uniqueIndex()
-    val userid=integer("user_id").uniqueIndex()
+    val userId = integer("user_id").uniqueIndex()
     val name = varchar("name",50)
 }
 //テーブルにクラス
 class PetsDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<PetsDAO>(PetsDAOs)
-    //var countber by UsersDAO.countber
-    var userid by PetsDAOs.userid
+    var userId by PetsDAOs.userId
     var name by PetsDAOs.name
-    //val pets by User referrersOn Users.pets
+}
+fun Application.petDao() {
+    Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
+
+    routing {
+        get("/users/{id}/pets") {
+            //入力されたidを使用する
+            val uid = call.parameters["id"]!!.toInt()
+            val dataPets= transaction {
+                PetsDAO.find { PetsDAOs.userId eq uid }.map { it.name }
+            }
+            val petCount = dataPets.size
+            val petName = dataPets.joinToString(",")
+            call.respondText("$uid"+"の買っているペットの数は"+"$petCount"+"頭で、それぞれの名前は、"+"$petName" +"です。")
+        }
+    }
 }
 
 
