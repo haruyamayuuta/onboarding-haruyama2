@@ -27,9 +27,8 @@ fun Application.petDao() {
         get("/users/{id}/pets") {
             //入力されたidを使用する
             val uid = call.parameters["id"]!!.toInt()
-            var dataPets = listOf("")
-            transaction {
-                dataPets = PetsDAO.find { PetsDAOs.userId eq uid }.map { it.name }
+            val dataPets= transaction {
+                PetsDAO.find { PetsDAOs.userId eq uid }.map { it.name }
             }
             val petCount = dataPets.size
             val petName = dataPets.joinToString(",")
