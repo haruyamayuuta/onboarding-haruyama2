@@ -25,20 +25,15 @@ fun Application.petDao() {
 
     routing {
         get("/users/{id}/pets") {
-            var petCount = 0
-            var userData: List<String>
-            var petName = ""
-            var useId = 0
             //入力されたidを使用する
             val uid = call.parameters["id"]!!.toInt()
+            var dataPets = listOf("")
             transaction {
-                val userPets = PetsDAO.find{PetsDAOs.userId eq uid}
-                useId = userPets.map { it.userId }[0]
-                petCount = userPets.count().toInt()
-                userData = userPets.map { it.name }
-                petName = userData.joinToString(",")
+                dataPets = PetsDAO.find { PetsDAOs.userId eq uid }.map { it.name }
             }
-            call.respondText("$useId"+"の買っているペットの数は"+"$petCount"+"頭で、それぞれの名前は、"+"$petName" +"です。")
+            val petCount = dataPets.size
+            val petName = dataPets.joinToString(",")
+            call.respondText("$uid"+"の買っているペットの数は"+"$petCount"+"頭で、それぞれの名前は、"+"$petName" +"です。")
         }
     }
 }

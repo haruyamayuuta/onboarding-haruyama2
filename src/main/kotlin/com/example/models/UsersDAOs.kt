@@ -22,9 +22,9 @@ fun Application.usersDao() {
     routing {
         get("/users/{id}") {
             var data: String? = null
+            val sid = call.parameters["id"]
+            val i: Int = Integer.parseInt(sid)
             transaction {
-                val sid = call.parameters["id"]
-                val i: Int = Integer.parseInt(sid)
                 val userdata = UsersDAO.findById(i)
                 if (userdata != null) {
                     data = userdata.name
