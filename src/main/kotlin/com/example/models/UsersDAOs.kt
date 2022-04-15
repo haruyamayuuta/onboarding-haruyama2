@@ -17,7 +17,7 @@ class UsersDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<UsersDAO>(UsersDAOs)
     var name by UsersDAOs.name
 }
-fun Application.usersdao() {
+fun Application.usersDao() {
     Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
     routing {
         get("/users/{id}") {
