@@ -17,7 +17,7 @@ object UsersDAOs:IntIdTable("Users"){
 class UsersDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<UsersDAO>(UsersDAOs)
     var name by UsersDAOs.name
-    val pets by PetsDAO referrersOn PetsDAOs.user
+    val pets by PetsDAO referrersOn PetsDAOs.userId
     //val users by PetsDAO referrersOn PetsDAOs.name
 }
 fun Application.usersDao() {
@@ -26,9 +26,9 @@ fun Application.usersDao() {
         get("/users/{id}") {
             var data: String? = null
             val sid = call.parameters["id"]
-            val i: Int = Integer.parseInt(sid)
+            val id: Int = Integer.parseInt(sid)
             transaction {
-                val userdata = UsersDAO.findById(i)
+                val userdata = UsersDAO.findById(id)
                 if (userdata != null) {
                     data = userdata.name
                 }
@@ -38,10 +38,10 @@ fun Application.usersDao() {
         get("/users/{id}/pets_v2"){
             val uid = call.parameters["id"]!!.toInt()
             val pets= transaction {
-                UsersDAO.findById(uid)?.pets?.toList()
+                UsersDAO.findById(uid)?.pets?.map { it.name }
             }
-            val petNames = pets?.joinToString(",") { it.user.name }
-            call.respondText(petNames.toString())
+            val petNames = pets!!.joinToString(",")
+            call.respondText("$uid"+"の買っているペットの数は"+"${pets!!.size}"+"頭で、それぞれの名前は、"+"$petNames"+"です。")
         }
     }
 }
