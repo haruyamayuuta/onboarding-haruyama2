@@ -11,11 +11,14 @@ import org.jetbrains.exposed.sql.*
 //オブジェクト作成
 object UsersDAOs:IntIdTable("Users"){
     val name = varchar("name",50)
+    //val users = reference("name",PetsDAOs)
 }
 //class作成
 class UsersDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<UsersDAO>(UsersDAOs)
     var name by UsersDAOs.name
+    val user by PetsDAO referrersOn PetsDAOs.name
+    //val users by PetsDAO referrersOn PetsDAOs.name
 }
 fun Application.usersDao() {
     Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
@@ -31,6 +34,14 @@ fun Application.usersDao() {
                 }
             }
             call.respondText("$data")
+        }
+        get("/users/{id}/pets_v2"){
+            val uid = call.parameters["id"]!!.toInt()
+            val pets= transaction {
+                UsersDAO.findById(uid)?.user?.toList()
+            }
+            val petNames = pets?.joinToString(",")
+            call.respondText(petNames.toString())
         }
     }
 }

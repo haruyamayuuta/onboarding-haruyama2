@@ -17,7 +17,7 @@ fun Application.module() {
     excute()
     usersDao()
     petDao()
-    userPet()
+    //userPet()
     install(Thymeleaf){
         setTemplateResolver(ClassLoaderTemplateResolver().apply {
             prefix = "/"
