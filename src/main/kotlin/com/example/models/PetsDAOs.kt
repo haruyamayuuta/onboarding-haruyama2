@@ -13,14 +13,15 @@ import org.jetbrains.exposed.sql.*
 object PetsDAOs:IntIdTable("Pets"){
     val userId = integer("user_id").uniqueIndex()
     //val name = varchar("name",50)
-    val name = reference("name",UsersDAOs)
+    val user = reference("name",UsersDAOs)
+    //val name = reference("name",UsersDAOs)
 }
 //テーブルにクラス
 class PetsDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<PetsDAO>(PetsDAOs)
     var userId by PetsDAOs.userId
     //var name by PetsDAOs.name
-    var name by UsersDAO referencedOn PetsDAOs.name
+    var user by UsersDAO referencedOn PetsDAOs.user
 }
 fun Application.petDao() {
     Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
@@ -30,7 +31,7 @@ fun Application.petDao() {
             //入力されたidを使用する
             val uid = call.parameters["id"]!!.toInt()
             val dataPets= transaction {
-                PetsDAO.find { PetsDAOs.userId eq uid }.map { it.name}
+                PetsDAO.find { PetsDAOs.userId eq uid }.map { it.user}
             }
             val petCount = dataPets.size
             val petName = dataPets.joinToString(",")

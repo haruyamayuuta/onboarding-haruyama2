@@ -17,7 +17,7 @@ object UsersDAOs:IntIdTable("Users"){
 class UsersDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<UsersDAO>(UsersDAOs)
     var name by UsersDAOs.name
-    val user by PetsDAO referrersOn PetsDAOs.name
+    val pets by PetsDAO referrersOn PetsDAOs.user
     //val users by PetsDAO referrersOn PetsDAOs.name
 }
 fun Application.usersDao() {
@@ -38,9 +38,9 @@ fun Application.usersDao() {
         get("/users/{id}/pets_v2"){
             val uid = call.parameters["id"]!!.toInt()
             val pets= transaction {
-                UsersDAO.findById(uid)?.user?.toList()
+                UsersDAO.findById(uid)?.pets?.toList()
             }
-            val petNames = pets?.joinToString(",")
+            val petNames = pets?.joinToString(",") { it.user.name }
             call.respondText(petNames.toString())
         }
     }
