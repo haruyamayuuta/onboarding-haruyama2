@@ -13,12 +13,14 @@ import org.jetbrains.exposed.sql.*
 object PetsDAOs:IntIdTable("Pets"){
     val userId = integer("user_id").uniqueIndex()
     val name = varchar("name",50)
+    val pets = reference("pet", Users)
 }
 //テーブルにクラス
 class PetsDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<PetsDAO>(PetsDAOs)
     var userId by PetsDAOs.userId
     var name by PetsDAOs.name
+    var pets by User referencedOn PetsDAOs.userId
 }
 fun Application.petDao() {
     Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
