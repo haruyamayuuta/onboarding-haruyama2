@@ -15,7 +15,7 @@ object Users:IntIdTable(){
 }
 class User(id: EntityID<Int>): IntEntity(id) {
     companion object : IntEntityClass<User>(Users)
-    val pets by User referrersOn PetsDAOs.userId
+    val pets by PetsDAO referrersOn PetsDAOs.userId
 }
 
 fun Application.userPet(){
