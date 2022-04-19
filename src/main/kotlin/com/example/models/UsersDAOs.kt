@@ -11,26 +11,34 @@ import org.jetbrains.exposed.sql.*
 //オブジェクト作成
 object UsersDAOs:IntIdTable("Users"){
     val name = varchar("name",50)
+    //val users = reference("name",PetsDAOs)
 }
 //class作成
 class UsersDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<UsersDAO>(UsersDAOs)
     var name by UsersDAOs.name
+    val pets by PetsDAO referrersOn PetsDAOs.userId
+    //val users by PetsDAO referrersOn PetsDAOs.name
 }
 fun Application.usersDao() {
     Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
     routing {
         get("/users/{id}") {
-            var data: String? = null
+
             val sid = call.parameters["id"]
-            val i: Int = Integer.parseInt(sid)
-            transaction {
-                val userdata = UsersDAO.findById(i)
-                if (userdata != null) {
-                    data = userdata.name
-                }
+            val id: Int = Integer.parseInt(sid)
+            val userData = transaction {
+                UsersDAO.findById(id)!!.name
             }
-            call.respondText("$data")
+            call.respondText("$userData")
+        }
+        get("/users/{id}/pets_v2"){
+            val uid = call.parameters["id"]!!.toInt()
+            val pets= transaction {
+                UsersDAO.findById(uid)?.pets?.map { it.name }
+            }
+            val petNames = pets!!.joinToString(",")
+            call.respondText("$uid"+"の買っているペットの数は"+"${pets!!.size}"+"頭で、それぞれの名前は、"+"$petNames"+"です。")
         }
     }
 }
