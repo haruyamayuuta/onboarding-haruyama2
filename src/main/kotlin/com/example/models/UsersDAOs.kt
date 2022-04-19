@@ -11,7 +11,6 @@ import org.jetbrains.exposed.sql.*
 //オブジェクト作成
 object UsersDAOs:IntIdTable("Users"){
     val name = varchar("name",50)
-    //val users = reference("name",PetsDAOs)
 }
 //class作成
 class UsersDAO(id: EntityID<Int>) : IntEntity(id) {
