@@ -24,16 +24,13 @@ fun Application.usersDao() {
     Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
     routing {
         get("/users/{id}") {
-            var data: String? = null
+
             val sid = call.parameters["id"]
             val id: Int = Integer.parseInt(sid)
-            transaction {
-                val userdata = UsersDAO.findById(id)
-                if (userdata != null) {
-                    data = userdata.name
-                }
+            val userData = transaction {
+                UsersDAO.findById(id)!!.name
             }
-            call.respondText("$data")
+            call.respondText("$userData")
         }
         get("/users/{id}/pets_v2"){
             val uid = call.parameters["id"]!!.toInt()
