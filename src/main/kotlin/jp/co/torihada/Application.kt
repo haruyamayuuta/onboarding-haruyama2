@@ -1,12 +1,12 @@
-package com.example
+package jp.co.torihada
 
-import com.example.controllers.excute
+
 import io.ktor.server.application.*
 import io.ktor.server.thymeleaf.*
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
-import com.example.plugins.*
-import com.example.*
-import com.example.models.*
+import jp.co.torihada.controllers.*
+import jp.co.torihada.models.*
+import jp.co.torihada.config.*
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
@@ -17,7 +17,6 @@ fun Application.module() {
     excute()
     usersDao()
     petDao()
-    //userPet()
     install(Thymeleaf){
         setTemplateResolver(ClassLoaderTemplateResolver().apply {
             prefix = "/"

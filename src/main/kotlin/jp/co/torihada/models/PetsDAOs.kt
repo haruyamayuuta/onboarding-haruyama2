@@ -1,4 +1,4 @@
-package com.example.models
+package jp.co.torihada.models
 
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
@@ -23,7 +23,6 @@ class PetsDAO(id: EntityID<Int>) : IntEntity(id) {
 }
 fun Application.petDao() {
     Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
-
     routing {
         get("/users/{id}/pets") {
             //入力されたidを使用する

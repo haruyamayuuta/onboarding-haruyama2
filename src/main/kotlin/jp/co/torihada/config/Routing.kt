@@ -1,4 +1,4 @@
-package com.example.plugins
+package jp.co.torihada.config
 
 import io.ktor.server.routing.*
 import io.ktor.http.*
@@ -15,7 +15,6 @@ fun Application.configureRouting() {
     val date = LocalDateTime.now()
     val dtformat = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")
     val fdate = dtformat.format(date)
-    // Starting point for a Ktor app:
     routing {
         get("/hello") {
             call.respondText("Hello $fdate")
