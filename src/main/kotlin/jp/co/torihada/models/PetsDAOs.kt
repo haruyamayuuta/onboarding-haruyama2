@@ -21,7 +21,7 @@ class PetsDAO(id: EntityID<Int>) : IntEntity(id) {
     var name by PetsDAOs.name
     var user by UsersDAO referencedOn PetsDAOs.userId
 }
-fun Application.petDao() {
+fun Application.modelspetDAOs() {
     Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
     routing {
         get("/users/{id}/pets") {

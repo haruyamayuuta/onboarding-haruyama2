@@ -19,7 +19,7 @@ class UsersDAO(id: EntityID<Int>) : IntEntity(id) {
     val pets by PetsDAO referrersOn PetsDAOs.userId
     //val users by PetsDAO referrersOn PetsDAOs.name
 }
-fun Application.usersDao() {
+fun Application.modelsUsersDAOs() {
     Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
     routing {
         get("/users/{id}") {
