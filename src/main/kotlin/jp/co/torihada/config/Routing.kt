@@ -26,33 +26,37 @@ fun Application.configureRouting() {
             call.respondText("Hello $id")
         }
         //kadai2-7-a
-        get("form"){FormController(call).form()}
-        post("result"){FormController(call).result()}
+        route(""){
+            get("form"){FormController(call).form()}
+            post("result"){FormController(call).result()}
+        }
 
-        get("users/{id}/pets") {
-            val uid = call.parameters["id"]!!.toInt()
-            val dataPets= transaction {
-                PetsDAO.find { PetsDAOs.userId eq uid }.map { it.name}
+        route("users") {
+            get("{id}/pets") {
+                val uid = call.parameters["id"]!!.toInt()
+                val dataPets = transaction {
+                    PetsDAO.find { PetsDAOs.userId eq uid }.map { it.name }
+                }
+                val petCount = dataPets.size
+                val petName = dataPets.joinToString(",")
+                call.respondText("$uid" + "の買っているペットの数は" + "$petCount" + "頭で、それぞれの名前は、" + "$petName" + "です。")
             }
-            val petCount = dataPets.size
-            val petName = dataPets.joinToString(",")
-            call.respondText("$uid"+"の買っているペットの数は"+"$petCount"+"頭で、それぞれの名前は、"+"$petName" +"です。")
-        }
-        get("users/{id}") {
-            val sid = call.parameters["id"]
-            val id: Int = Integer.parseInt(sid)
-            val userData = transaction {
-                UsersDAO.findById(id)!!.name
+            get("{id}") {
+                val sid = call.parameters["id"]
+                val id: Int = Integer.parseInt(sid)
+                val userData = transaction {
+                    UsersDAO.findById(id)!!.name
+                }
+                call.respondText("$userData")
             }
-            call.respondText("$userData")
-        }
-        get("users/{id}/pets_v2"){
-            val uid = call.parameters["id"]!!.toInt()
-            val pets= transaction {
-                UsersDAO.findById(uid)?.pets?.map { it.name }
+            get("{id}/pets_v2") {
+                val uid = call.parameters["id"]!!.toInt()
+                val pets = transaction {
+                    UsersDAO.findById(uid)?.pets?.map { it.name }
+                }
+                val petNames = pets!!.joinToString(",")
+                call.respondText("$uid" + "の買っているペットの数は" + "${pets!!.size}" + "頭で、それぞれの名前は、" + "$petNames" + "です。")
             }
-            val petNames = pets!!.joinToString(",")
-            call.respondText("$uid"+"の買っているペットの数は"+"${pets!!.size}"+"頭で、それぞれの名前は、"+"$petNames"+"です。")
         }
     }
 }
