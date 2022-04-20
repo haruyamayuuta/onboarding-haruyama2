@@ -2,8 +2,6 @@ package jp.co.torihada
 
 
 import io.ktor.server.application.*
-import io.ktor.server.thymeleaf.*
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import jp.co.torihada.controllers.*
 import jp.co.torihada.models.*
 import jp.co.torihada.config.*
@@ -15,7 +13,5 @@ fun main(args: Array<String>): Unit =
 fun Application.module() {
     configureTemplateEngine()
     configureRouting()
-    controllerFormController()
-    modelsUsersDAOs()
-    modelspetDAOs()
+    //controllerFormController()
 }
