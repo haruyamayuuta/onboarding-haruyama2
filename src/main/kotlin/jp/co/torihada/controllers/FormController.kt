@@ -7,7 +7,7 @@ import io.ktor.server.request.*
 
 class FormController(val call: ApplicationCall){
     suspend fun form(){
-        call.respond{ThymeleafContent("form/form", emptyMap())}
+        call.respond(ThymeleafContent("form/form", emptyMap()))
     }
     suspend fun result(){
         val post = call.receiveParameters()["name"].toString()

@@ -4,20 +4,17 @@ import io.ktor.server.routing.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.thymeleaf.*
 import jp.co.torihada.controllers.FormController
 import jp.co.torihada.models.*
-import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureRouting() {
-    Database.connect("jdbc:mysql://127.0.0.1/test", "com.mysql.cj.jdbc.Driver", "root", "")
     val date = LocalDateTime.now()
     val dtformat = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")
     val fdate = dtformat.format(date)
-    routing {
+    install(Routing) {
         get("/hello") {
             call.respondText("Hello $fdate")
         }
@@ -27,10 +24,10 @@ fun Application.configureRouting() {
         }
         //kadai2-7-a
         route(""){
+            get("test"){call.respond(ThymeleafContent("form/form", emptyMap()))}
             get("form"){FormController(call).form()}
             post("result"){FormController(call).result()}
         }
-
         route("users") {
             get("{id}/pets") {
                 val uid = call.parameters["id"]!!.toInt()

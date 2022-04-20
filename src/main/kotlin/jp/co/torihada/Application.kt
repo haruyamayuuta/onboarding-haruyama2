@@ -13,5 +13,5 @@ fun main(args: Array<String>): Unit =
 fun Application.module() {
     configureTemplateEngine()
     configureRouting()
-    //controllerFormController()
+    configureDatabase()
 }
