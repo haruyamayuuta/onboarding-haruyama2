@@ -8,6 +8,7 @@ import io.ktor.server.request.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+//更新できてる？
 fun Application.excute() {
     // Starting point for a Ktor app:
     routing {
